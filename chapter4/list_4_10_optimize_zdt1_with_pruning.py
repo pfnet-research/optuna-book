@@ -12,17 +12,15 @@ def f2(X):
 def objective(trial):
     X = [trial.suggest_float(f"x{i}", 0, 1) for i in range(30)]
     v1 = f1(X)
-    v2 = f2(X)
-    return v1, v2
 
-sampler = optuna.samplers.NSGAIISampler(
     # TODO: comment
-    crossover="undx"
-)
+    if v1 > 0.5:
+        raise optuna.TrialPruned(f"Too large value: {v1}")
 
-study = optuna.create_study(
-    directions=["minimize", "minimize"]
-    sampler=sampler
-)
+    v2 = f2(X)
+    return v2
+
+sampler = optuna.samplers.NSGAIISampler(crossover="undx")
+study = optuna.create_study(sampler=sampler)
 
 study.optimize(objective, n_trials=1000)

@@ -10,15 +10,16 @@ def f2(X):
     return g * h
 
 def objective(trial):
-    X = [trial.suggest_float(f"x{i}", 0, 1) for i in range(30)]
+    # TODO: comment
+    X = [trial.suggest_float("x0", 0, 0.5)]
+
+    # TODO: comment
+    X += [trial.suggest_float(f"x{i}", 0, 1) for i in range(1, 30)]
     v1 = f1(X)
     v2 = f2(X)
     return v1, v2
 
-sampler = optuna.samplers.NSGAIISampler(
-    # TODO: comment
-    crossover="undx"
-)
+sampler = optuna.samplers.NSGAIISampler(crossover="undx")
 
 study = optuna.create_study(
     directions=["minimize", "minimize"]
