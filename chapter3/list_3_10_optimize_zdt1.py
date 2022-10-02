@@ -16,14 +16,10 @@ def objective(trial):
     return v1, v2
 
 sampler = optuna.samplers.NSGAIISampler(
-    # 制約付き最適化とは直接関係ないですが、
-    # デフォルトよりも UNDX というクロスオーバ手法の方が、
-    # 可視化結果が分かりやすいので、今回はこちらを指定しています
-    crossover="undx"
+    crossover=optuna.samplers.nsgaii.UNDXCrossover()
 )
-
 study = optuna.create_study(
-    directions=["minimize", "minimize"]
+    directions=["minimize", "minimize"],
     sampler=sampler
 )
 
