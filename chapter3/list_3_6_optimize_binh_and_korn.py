@@ -13,13 +13,12 @@ def objective(trial):
     objective0 = f1(x, y)
     objective1 = f2(x, y)
 
-    # TODO: comment
+    # 単一目的最適化からの変更点１: 目的関数が複数の値を返す
     return objective0, objective1
 
-if __file__ == "__main__":
-    study = optuna.create_study(
-        # TODO: comment
-        directions=["minimize", "minimize"]
-    )
+study = optuna.create_study(
+    # 変更点２: 目的毎に、最適化の方向を指定する
+    directions=["minimize", "minimize"]
+)
 
-    study.optimize(objective, n_trials=100)
+study.optimize(objective, n_trials=100)

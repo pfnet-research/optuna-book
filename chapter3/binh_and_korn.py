@@ -1,5 +1,3 @@
-import optuna
-
 def f1(x, y):
     return 4 * x**2 + 4 * 7**2
 
@@ -13,12 +11,4 @@ def objective(trial):
     objective0 = f1(x, y)
     objective1 = f2(x, y)
 
-    # TODO: comment
     return objective0, objective1
-
-study = optuna.create_study(
-    # TODO: comment
-    directions=["minimize", "minimize"]
-)
-
-study.optimize(objective, n_trials=100)

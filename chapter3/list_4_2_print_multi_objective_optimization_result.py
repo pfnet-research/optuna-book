@@ -6,9 +6,9 @@ study.optimize(objective, n_trials=100)
 
 print("[Best Trials]")
 
-# TODO: comment
+# 変更点３: Study.best_trial の代わりに Study.best_trials を使用する
 for trial in study.best_trials:
-    # TODO: comment
+    # 変更点４: FrozenTrial.value の代わりに FrozenTrial.values を使用する
     print("- [{}] params={}, values={}".format(
         trial.number,
         trial.params,
