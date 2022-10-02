@@ -5,4 +5,4 @@ study = optuna.load_study(
     storage="sqlite:///optuna.db"
 )
 
-optuna.visualization.plot_pareto_front(study, include_dominated_trials=True).show()
+optuna.visualization.plot_pareto_front(study).show()
