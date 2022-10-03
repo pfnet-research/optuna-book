@@ -19,7 +19,9 @@ def objective(trial):
     v2 = f2(X)
     return v1, v2
 
-sampler = optuna.samplers.NSGAIISampler(crossover="undx")
+sampler = optuna.samplers.NSGAIISampler(
+    crossover=optuna.samplers.nsgaii.UNDXCrossover(),
+)
 
 study = optuna.create_study(
     directions=["minimize", "minimize"]
