@@ -10,14 +10,12 @@ def objective(trial):
     x = trial.suggest_float("x", 0, 5)
     y = trial.suggest_float("y", 0, 3)
 
-    objective0 = f1(x, y)
-    objective1 = f2(x, y)
+    v1 = f1(x, y)
+    v2 = f2(x, y)
 
-    # 単一目的最適化からの変更点１: 目的関数が複数の値を返します
-    return objective0, objective1
+    return v1, v2
 
 study = optuna.create_study(
-    # 変更点２: 目的毎に、最適化の方向を指定します
     directions=["minimize", "minimize"]
 )
 
