@@ -14,17 +14,12 @@ def objective(trial):
     v1 = f1(X)
     v2 = f2(X)
 
-    # [変更点１]
-    # 「f1 の値が 0.5 以下」という制約を違反しているかどうかを、ユーザ属性に覚えておきます。
     trial.set_user_attr("constraints", [v1 - 0.5])
 
     return v1, v2
 
 sampler = optuna.samplers.NSGAIISampler(
     crossover=optuna.samplers.nsgaii.UNDXCrossover(),
-
-    # [変更点２]
-    # サンプラーに制約を表現する関数を指定します。
     constraints_func=lambda trial: trial.user_attrs["constraints"]
 )
 
