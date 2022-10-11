@@ -42,8 +42,8 @@ def objective(trial):
 # study_name と storage を指定することで study を保存できる
 study = optuna.create_study(
     direction="maximize",
-    study_name="chapter2-conditional",
-    storage="sqlite:///optuna-storage.db",
+    study_name="ch2-conditional",
+    storage="sqlite:///optuna.db",
 )
 study.optimize(objective, n_trials=100)
 
