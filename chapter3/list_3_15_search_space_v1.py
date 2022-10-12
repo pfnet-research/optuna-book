@@ -1,3 +1,4 @@
+import optuna
 import lightgbm as lgb
 import numpy as np
 import sklearn.datasets
@@ -5,7 +6,6 @@ import sklearn.metrics
 from sklearn.model_selection import train_test_split
 
 def objective(trial):
-    # データセットを準備
     data, target = sklearn.datasets.fetch_covtype(return_X_y=True)
     target = list(map(lambda label: int(label) - 1, target))
     train_x, valid_x, train_y, valid_y = train_test_split(
@@ -16,11 +16,9 @@ def objective(trial):
     )
     dtrain = lgb.Dataset(train_x, label=train_y)
 
-    # Optunaがサジェストしたハイパーパラメータでモデルを学習
     params = {
         "verbosity": -1,
 
-        # 最適化対象のハイパーパラメータ（13個）
         "max_bin": trial.suggest_int("max_bin", 10, 500),
         "num_leaves": trial.suggest_int("num_leaves", 2, 500),
         "min_data_in_leaf": trial.suggest_int("min_data_in_leaf", 2, 50),
@@ -37,17 +35,22 @@ def objective(trial):
     }
     gbm = lgb.train(params, dtrain)
 
-    # 学習したモデルの精度を評価
     preds = gbm.predict(valid_x)
     pred_labels = np.rint(preds)
     accuracy = sklearn.metrics.accuracy_score(valid_y, pred_labels)
 
     return accuracy
 
-# 最適化を実行
 study = optuna.create_study(
-    direction="maximize",
+    study_name="ch3-search-space-v1",
     storage="sqlite:///optuna.db",
-    study_name="lightgbm-tpe-v1",
+    direction="maximize",
 )
 study.optimize(objective, n_trials=100)
+
+trial = study.best_trial
+print("Best trial:")
+print(f"  Accuracy: {trial.value}")
+print("  Params: ")
+for key, value in trial.params.items():
+    print(f"    {key}: {value}")
