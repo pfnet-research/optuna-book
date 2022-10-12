@@ -1,11 +1,11 @@
 import optuna
 
 study = optuna.load_study(
+    study_name="ch3-lightgbm-search-space-v1",
     storage="sqlite:///optuna.db",
-    study_name="ch4-lightgbm-random-v1"
 )
 
 optuna.visualization.plot_slice(
     study,
-    ["extra_trees", "feature_fraction"]
+    params=["extra_trees", "feature_fraction"]
 ).show()

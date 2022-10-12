@@ -3,9 +3,9 @@ import numpy as np
 import sklearn.datasets
 import sklearn.metrics
 from sklearn.model_selection import train_test_split
+import optuna
 
 def objective(trial):
-    # データセットを準備
     data, target = sklearn.datasets.fetch_covtype(return_X_y=True)
     target = list(map(lambda label: int(label) - 1, target))
     train_x, valid_x, train_y, valid_y = train_test_split(
@@ -16,14 +16,10 @@ def objective(trial):
     )
     dtrain = lgb.Dataset(train_x, label=train_y)
 
-    # Optunaがサジェストしたハイパーパラメータでモデルを学習
     params = {
         "verbosity": -1,
 
-        # 0.1～1.0の範囲だったのを、0.6～0.9に狭める
         "feature_fraction": trial.suggest_float("feature_fraction", 0.6, 0.9),
-
-        # 常にFalseを使用
         "extra_trees": False,
 
         "max_bin": trial.suggest_int("max_bin", 10, 500),
@@ -40,18 +36,16 @@ def objective(trial):
     }
     gbm = lgb.train(params, dtrain)
 
-    # 学習したモデルの精度を評価
     preds = gbm.predict(valid_x)
     pred_labels = np.rint(preds)
     accuracy = sklearn.metrics.accuracy_score(valid_y, pred_labels)
 
     return accuracy
 
-# ランダムサンプラーを指定して、最適化を実行
 study = optuna.create_study(
-    sampler=optuna.sampler.RandomSampler(),
-    direction="maximize",
+    study_name="ch3-lightgbm-search-space-v2",
     storage="sqlite:///optuna.db",
-    study_name="ch4-lightgbm-random-v1",
+    direction="maximize",
+    sampler=optuna.samplers.RandomSampler(),
 )
 study.optimize(objective, n_trials=100)
