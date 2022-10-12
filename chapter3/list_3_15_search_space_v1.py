@@ -41,11 +41,7 @@ def objective(trial):
 
     return accuracy
 
-study = optuna.create_study(
-    study_name="ch3-search-space-v1",
-    storage="sqlite:///optuna.db",
-    direction="maximize",
-)
+study = optuna.create_study(direction="maximize");
 study.optimize(objective, n_trials=100)
 
 trial = study.best_trial
