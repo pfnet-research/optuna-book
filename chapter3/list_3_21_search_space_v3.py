@@ -44,8 +44,15 @@ def objective(trial):
     return accuracy
 
 study = optuna.create_study(
-    study_name="ch3-lightgbm-search-space-tpe-v3",
+    study_name="ch3-lightgbm-search-space-v3-tpe",
     storage="sqlite:///optuna.db",
     direction="maximize",
 )
 study.optimize(objective, n_trials=100)
+
+trial = study.best_trial
+print("Best trial:")
+print(f"  Accuracy: {trial.value}")
+print("  Params: ")
+for key, value in trial.params.items():
+    print(f"    {key}: {value}")
