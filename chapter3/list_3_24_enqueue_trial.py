@@ -3,7 +3,7 @@ import optuna
 def objective(trial):
     x = trial.suggest_float("x", -1, 1)
     y = trial.suggest_float("y", -1, 1)
-    return x + y
+    return x * y
 
 study = optuna.create_study()
 
