@@ -10,6 +10,10 @@ from torchvision import datasets
 from torchvision import transforms
 
 
+# GPUを用いる場合は"cuda"などを指定する
+DEVICE = torch.device("cpu")
+
+
 def define_model(trial):
     n_layers = trial.suggest_int("n_layers", 1, 3)
     layers = []
@@ -52,7 +56,7 @@ def get_dataset():
 def objective(trial):
 
     # モデル・オプティマイザ・データセットを用意する
-    model = define_model(trial)
+    model = define_model(trial).to(DEVICE)
     optimizer = optim.Adam(model.parameters())
     train_loader, valid_loader = get_dataset()
 
@@ -60,6 +64,8 @@ def objective(trial):
     for epoch in range(10):
         model.train()
         for data, target in train_loader:
+            data = data.to(DEVICE)
+            target = target.to(DEVICE)
             optimizer.zero_grad()
             output = model(data)
             loss = F.nll_loss(output, target)
@@ -70,6 +76,8 @@ def objective(trial):
         correct = 0
         with torch.no_grad():
             for data, target in valid_loader:
+                data = data.to(DEVICE)
+                target = target.to(DEVICE)
                 output = model(data)
                 pred = output.argmax(dim=1, keepdim=True)
                 correct += pred.eq(target.view_as(pred)).sum().item()
