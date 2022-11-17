@@ -22,8 +22,8 @@ sampler = optuna.samplers.NSGAIISampler(
 )
 
 study = optuna.create_study(
-    directions=["minimize", "minimize"]
-    sampler=sampler
+    directions=["minimize", "minimize"],
+    sampler=sampler,
 )
 
 study.optimize(objective, n_trials=1000)
